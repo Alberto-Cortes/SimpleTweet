@@ -3,18 +3,24 @@ package com.codepath.apps.restclienttemplate.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 // Model used to build each tweet.
+@Parcel
 public class Tweet {
 
     // Variables needed to work with a tweet.
     public String body;
     public String createdAt;
     public User user;
+
+    // Empty constructor required by Parcel
+    public Tweet() {
+    }
 
     // Get and set data from a single object of the JSON response.
     public static Tweet fromJson(JSONObject jsonObject) throws JSONException {
