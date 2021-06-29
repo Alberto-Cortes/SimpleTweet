@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
@@ -78,6 +80,22 @@ public class TimelineActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    // Override menu creating menu to use our own menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    // Handle menuu option being selected, at the moment compose a new tweet
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.btnCompose){
+            // TODO: HANDLE COMPOSE BUTTON PRESSING
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // Method to handle logout button press
