@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -94,6 +95,8 @@ public class TimelineActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.btnCompose){
             // TODO: HANDLE COMPOSE BUTTON PRESSING
+            Intent i = new Intent(this, ComposeActivity.class);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
