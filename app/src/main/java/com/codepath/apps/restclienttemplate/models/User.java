@@ -5,10 +5,12 @@ import org.json.JSONObject;
 
 public class User {
 
+    // Member variables for a user.
     public String name;
     public String screenName;
     public String publicImageUrl;
 
+    // Create a new user from a JSON APIs' response.
     public static User fromJson(JSONObject jsonObject) throws JSONException {
         User user = new User();
         user.name = jsonObject.getString("name");
