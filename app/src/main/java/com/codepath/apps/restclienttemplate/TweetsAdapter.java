@@ -1,7 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
-import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
 import org.jetbrains.annotations.NotNull;
@@ -104,7 +104,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
         ImageView ivProfileImage;
         ImageView ivTweetImage;
         TextView tvBody;
-        TextView tvScreenName;
+        TextView tvHandleName;
+        TextView tvUserName;
         TextView tvTimestamp;
 
         // Connect visual with logic elements.
@@ -113,25 +114,30 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
 
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
-            tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            tvHandleName = itemView.findViewById(R.id.tvHandleName);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
+            tvUserName = itemView.findViewById(R.id.tvUserName);
         }
 
         // Bind data to row of the Recycle View.
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
-            tvScreenName.setText(tweet.user.screenName);
+            tvHandleName.setText(tweet.user.name);
             tvTimestamp.setText(getRelativeTimeAgo(tweet.createdAt));
+            tvUserName.setText("@" + tweet.user.screenName);
             Glide.with(context)
                     .load(tweet.user.publicImageUrl)
+                    .circleCrop()
                     .into(ivProfileImage);
             Log.i("Adapter", "IMAGE URL" + tweet.imageUrl);
 
             // Check if tweet has image URL, if it has display it, if it does not, remove Image View
             if (!tweet.imageUrl.isEmpty()){
+                ivTweetImage.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .load(tweet.imageUrl)
+                        .transform(new RoundedCorners(45))
                         .into(ivTweetImage);
             } else {
                 ivTweetImage.setVisibility(View.GONE);

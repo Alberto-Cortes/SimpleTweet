@@ -1,12 +1,16 @@
 package com.codepath.apps.restclienttemplate;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -77,6 +81,10 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_red_light
         );
 
+        ActionBar bar = getSupportActionBar();
+        String color = getResources().getString(R.color.twitter_blue);
+        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(color)));
+
     }
 
     // Fetch data from Twitter's APIs
@@ -115,7 +123,6 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.btnCompose){
-            // TODO: HANDLE COMPOSE BUTTON PRESSING
             Intent i = new Intent(this, ComposeActivity.class);
             startActivityForResult(i, REQUEST_CODE);
         }
