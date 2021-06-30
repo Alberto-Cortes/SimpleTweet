@@ -1,6 +1,7 @@
 package com.codepath.apps.restclienttemplate;
 
 import android.content.Context;
+import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +102,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
 
         // Declare the variables needed for the tweet.
         ImageView ivProfileImage;
+        ImageView ivTweetImage;
         TextView tvBody;
         TextView tvScreenName;
         TextView tvTimestamp;
@@ -113,6 +115,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
+            ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
         }
 
         // Bind data to row of the Recycle View.
@@ -123,6 +126,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
             Glide.with(context)
                     .load(tweet.user.publicImageUrl)
                     .into(ivProfileImage);
+            Log.i("Adapter", "IMAGE URL" + tweet.imageUrl);
+
+            // Check if tweet has image URL, if it has display it, if it does not, remove Image View
+            if (!tweet.imageUrl.isEmpty()){
+                Glide.with(context)
+                        .load(tweet.imageUrl)
+                        .into(ivTweetImage);
+            } else {
+                ivTweetImage.setVisibility(View.GONE);
+            }
             Log.i("Adapter", "DATA BINDED TO ROW");
         }
     }

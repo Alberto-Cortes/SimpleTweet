@@ -1,5 +1,11 @@
 package com.codepath.apps.restclienttemplate.models;
 
+import android.media.Image;
+import android.util.Log;
+import android.widget.ImageView;
+
+import com.facebook.stetho.inspector.jsonrpc.JsonRpcException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,6 +23,7 @@ public class Tweet {
     public String body;
     public String createdAt;
     public User user;
+    public String imageUrl = "";
 
     // Empty constructor required by Parcel
     public Tweet() {
@@ -27,6 +34,15 @@ public class Tweet {
         Tweet tweet = new Tweet();
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
+        // Try to get image URL from request, catch exception if not available
+        try {
+            JSONObject media = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0);
+            tweet.imageUrl = media.getString("media_url_https");
+            Log.i("TweetModel", "Fetched image url correctly " + tweet.imageUrl);
+        } catch (JSONException e){
+            Log.e("TweetModel", "Error getting images");
+        }
+
 
         // This calls the other model defined, user.
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
