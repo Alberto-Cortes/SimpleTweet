@@ -42,6 +42,7 @@ public class TimelineActivity extends AppCompatActivity {
     List<Tweet> tweets;
     TweetsAdapter adapter;
     SwipeRefreshLayout swipeContainer;
+    MenuItem miActionProgressItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,16 +76,8 @@ public class TimelineActivity extends AppCompatActivity {
         });
 
         swipeContainer.setColorSchemeResources(
-                android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light
+                R.color.twitter_blue_50
         );
-
-        ActionBar bar = getSupportActionBar();
-        String color = getResources().getString(R.color.twitter_blue);
-        bar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(color)));
-
     }
 
     // Fetch data from Twitter's APIs
@@ -92,6 +85,8 @@ public class TimelineActivity extends AppCompatActivity {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
+                // Show progress bar as an operation is in progress
+                miActionProgressItem.setVisible(true);
                 Log.i(TAG, "Tweets obtained succesfully" + json.jsonArray);
                 JSONArray jsonArray = json.jsonArray;
                 try {
@@ -100,6 +95,8 @@ public class TimelineActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     Log.i(TAG, "adapter notified of changes");
                     swipeContainer.setRefreshing(false);
+                    // Hide progress bar as operation is finished
+                    miActionProgressItem.setVisible(false);
                 } catch (JSONException e) {
                     Log.e(TAG, "Could not get data from JSON", e);
                 }
@@ -119,7 +116,7 @@ public class TimelineActivity extends AppCompatActivity {
         return true;
     }
 
-    // Handle menuu option being selected, at the moment compose a new tweet
+    // Handle menu option being selected, at the moment compose a new tweet
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.btnCompose){
@@ -152,4 +149,13 @@ public class TimelineActivity extends AppCompatActivity {
         // Return to login activity
         finish();
     }
+
+    // Prepare options menu so it connects the progress bar with its logic
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
 }
