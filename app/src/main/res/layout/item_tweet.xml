@@ -91,7 +91,7 @@
             android:layout_centerInParent="true"
             android:layout_marginStart="50dp"
             android:background="@android:color/white"
-            app:srcCompat="@drawable/ic_vector_messages" />
+            app:srcCompat="@drawable/ic_vector_messages_stroke" />
 
         <ImageButton
             android:id="@+id/ibTweetRetweet"
@@ -101,7 +101,7 @@
             android:layout_toStartOf="@+id/ibTweetLike"
             android:layout_toEndOf="@+id/ibTweetReply"
             android:background="@android:color/white"
-            app:srcCompat="@drawable/ic_vector_retweet" />
+            app:srcCompat="@drawable/ic_vector_retweet_stroke" />
 
         <ImageButton
             android:id="@+id/ibTweetLike"
@@ -111,7 +111,7 @@
             android:layout_centerInParent="true"
             android:layout_marginEnd="50dp"
             android:background="@android:color/white"
-            app:srcCompat="@drawable/ic_vector_heart" />
+            app:srcCompat="@drawable/ic_vector_heart_stroke" />
     </RelativeLayout>
 
 

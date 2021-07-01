@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,13 @@ import java.util.Locale;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder> {
 
+    // Interface to listen to clicks on the tweets
+    public interface OnTweetInteractionListener{
+        void onReplyClicked(int position);
+        void onLikeClicked(int position);
+        void onRetweetClicked(int position);
+    }
+
     private static final int SECOND_MILLIS = 1000;
     private static final int MINUTE_MILLIS = 60 * SECOND_MILLIS;
     private static final int HOUR_MILLIS = 60 * MINUTE_MILLIS;
@@ -33,10 +41,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
     Context context;
     List<Tweet> tweets;
 
+    OnTweetInteractionListener tweetInteractionListener;
+
     // Constructor for the class
-    public TweetsAdapter(Context context, List<Tweet> tweets) {
+    public TweetsAdapter(Context context,
+                         List<Tweet> tweets,
+                         OnTweetInteractionListener listener) {
         this.context = context;
         this.tweets = tweets;
+
+        this.tweetInteractionListener = listener;
     }
 
     public String getRelativeTimeAgo(String rawJsonDate) {
@@ -107,6 +121,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
         TextView tvHandleName;
         TextView tvUserName;
         TextView tvTimestamp;
+        ImageButton ibTweetReply;
+        ImageButton ibTweetRetweet;
+        ImageButton ibTweetLike;
 
         // Connect visual with logic elements.
         public Viewholder(@NotNull View itemView) {
@@ -118,6 +135,10 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
             tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
             ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
             tvUserName = itemView.findViewById(R.id.tvUserName);
+
+            ibTweetLike = itemView.findViewById(R.id.ibTweetLike);
+            ibTweetReply = itemView.findViewById(R.id.ibTweetLike);
+            ibTweetRetweet = itemView.findViewById(R.id.ibTweetRetweet);
         }
 
         // Bind data to row of the Recycle View.
@@ -130,7 +151,6 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
                     .load(tweet.user.publicImageUrl)
                     .circleCrop()
                     .into(ivProfileImage);
-            Log.i("Adapter", "IMAGE URL" + tweet.imageUrl);
 
             // Check if tweet has image URL, if it has display it, if it does not, remove Image View
             if (!tweet.imageUrl.isEmpty()){
@@ -142,7 +162,36 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
             } else {
                 ivTweetImage.setVisibility(View.GONE);
             }
-            Log.i("Adapter", "DATA BINDED TO ROW");
+            if (tweet.liked){
+                ibTweetLike.setImageResource(R.drawable.ic_vector_heart);
+            } else {
+                ibTweetLike.setImageResource(R.drawable.ic_vector_heart_stroke);
+            }
+            if (tweet.retweeted) {
+                ibTweetRetweet.setImageResource(R.drawable.ic_vector_retweet);
+            } else {
+                ibTweetRetweet.setImageResource(R.drawable.ic_vector_retweet_stroke);
+            }
+
+            // Methods for each image button on the tweets. Each method calls the implementation done on the TimelineActivity
+            ibTweetReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tweetInteractionListener.onReplyClicked(getAdapterPosition());
+                }
+            });
+            ibTweetRetweet.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tweetInteractionListener.onRetweetClicked(getAdapterPosition());
+                }
+            });
+            ibTweetLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tweetInteractionListener.onLikeClicked(getAdapterPosition());
+                }
+            });
         }
     }
 }

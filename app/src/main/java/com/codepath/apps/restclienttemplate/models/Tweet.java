@@ -24,6 +24,9 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String imageUrl = "";
+    public long id;
+    public boolean liked;
+    public boolean retweeted;
 
     // Empty constructor required by Parcel
     public Tweet() {
@@ -34,11 +37,13 @@ public class Tweet {
         Tweet tweet = new Tweet();
         tweet.body = jsonObject.getString("text");
         tweet.createdAt = jsonObject.getString("created_at");
+        tweet.id = jsonObject.getLong("id");
+        tweet.liked = jsonObject.getBoolean("favorited");
+        tweet.retweeted = jsonObject.getBoolean("retweeted");
         // Try to get image URL from request, catch exception if not available
         try {
             JSONObject media = jsonObject.getJSONObject("entities").getJSONArray("media").getJSONObject(0);
             tweet.imageUrl = media.getString("media_url_https");
-            Log.i("TweetModel", "Fetched image url correctly " + tweet.imageUrl);
         } catch (JSONException e){
             Log.e("TweetModel", "Error getting images");
         }

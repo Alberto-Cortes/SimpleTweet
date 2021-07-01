@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -23,6 +24,7 @@ import com.facebook.stetho.inspector.jsonrpc.JsonRpcException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import java.util.List;
 
 import okhttp3.Headers;
 
-public class TimelineActivity extends AppCompatActivity {
+public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetInteractionListener {
 
     // Tag used for logging
     public static final String TAG = "TimelineActivity";
@@ -60,7 +62,7 @@ public class TimelineActivity extends AppCompatActivity {
 
         // Instance the adapter, pass context and tweet list.
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TweetsAdapter(this, tweets);
+        adapter = new TweetsAdapter(this, tweets, this);
 
         // Set recycler view's adapter as the one we just instanced.
         rvTweets.setAdapter(adapter);
@@ -87,13 +89,11 @@ public class TimelineActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 // Show progress bar as an operation is in progress
                 miActionProgressItem.setVisible(true);
-                Log.i(TAG, "Tweets obtained succesfully" + json.jsonArray);
                 JSONArray jsonArray = json.jsonArray;
                 try {
                     adapter.clear();
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
                     adapter.notifyDataSetChanged();
-                    Log.i(TAG, "adapter notified of changes");
                     swipeContainer.setRefreshing(false);
                     // Hide progress bar as operation is finished
                     miActionProgressItem.setVisible(false);
@@ -158,4 +158,36 @@ public class TimelineActivity extends AppCompatActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public void onReplyClicked(int position) {
+        // call the API
+
+    }
+
+    @Override
+    public void onLikeClicked(final int position) {
+        // call the API and post the like/dislike
+        final Tweet tweet = tweets.get(position);
+
+        client.likeInteraction(tweet.liked, tweet.id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                // Update the tweet liked attribute, the tweets array and the adapter.
+                tweet.liked = !tweet.liked;
+                tweets.set(position, tweet);
+                adapter.notifyItemChanged(position);
+            }
+
+            // Toast to notify user if there was any error
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Toast.makeText(TimelineActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onRetweetClicked(int position) {
+        // call the API
+    }
 }
