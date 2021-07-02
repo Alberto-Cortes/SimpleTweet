@@ -187,7 +187,23 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     }
 
     @Override
-    public void onRetweetClicked(int position) {
+    public void onRetweetClicked(final int position) {
         // call the API
+        final Tweet tweet = tweets.get(position);
+
+        client.retweetInteraction(tweet.retweeted, tweet.id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                tweet.retweeted = !tweet.retweeted;
+                tweets.set(position, tweet);
+                adapter.notifyItemChanged(position);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+                Toast.makeText(TimelineActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
+                Log.e("Beto", response, throwable);
+            }
+        });
     }
 }

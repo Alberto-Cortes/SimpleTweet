@@ -60,13 +60,23 @@ public class TwitterClient extends OAuthBaseClient {
 	}
 	public void likeInteraction(boolean isLiked, long id, JsonHttpResponseHandler handler){
 		String apiUrl;
-		if (!isLiked){
-			apiUrl = getApiUrl("/favorites/create.json");
-		} else {
+		if (isLiked){
 			apiUrl = getApiUrl("/favorites/destroy.json");
+		} else {
+			apiUrl = getApiUrl("/favorites/create.json");
 		}
 		RequestParams params = new RequestParams();
 		params.put("id", String.valueOf(id));
 		client.post(apiUrl, params, "", handler);
+	}
+	public void retweetInteraction(boolean isRetweeted, long id, JsonHttpResponseHandler handler){
+		String apiID = String.valueOf(id);
+		String apiUrl;
+		if (isRetweeted){
+			apiUrl = getApiUrl("/statuses/unretweet/" + apiID	+ ".json");
+		} else {
+			apiUrl = getApiUrl("/statuses/retweet/" + apiID + ".json");
+		}
+		client.post(apiUrl, handler);
 	}
 }
