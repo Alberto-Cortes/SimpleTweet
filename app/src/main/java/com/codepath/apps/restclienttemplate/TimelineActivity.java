@@ -37,6 +37,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     // Tag used for logging
     public static final String TAG = "TimelineActivity";
     private final int REQUEST_CODE = 20;
+    public static final String EXTRA_TWEET = "extra_tweet";
 
     // Declare client instance and recycle view.
     TwitterClient client;
@@ -166,9 +167,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     @Override
     public void onLikeClicked(final int position) {
-        // call the API and post the like/dislike
+        // Extract a tweet from the tweets array
         final Tweet tweet = tweets.get(position);
 
+        // Use the API calling method depending on whether a tweet has a like or not
         client.likeInteraction(tweet.liked, tweet.id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -188,9 +190,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     @Override
     public void onRetweetClicked(final int position) {
-        // call the API
+        // Extract a tweet from the tweets array
         final Tweet tweet = tweets.get(position);
 
+        // Use the API calling method depending on whether a tweet has been retweeted or not
         client.retweetInteraction(tweet.retweeted, tweet.id, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
@@ -205,5 +208,20 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
                 Log.e("Beto", response, throwable);
             }
         });
+    }
+    // Handle tap on tweet body to go to tweet detail
+    @Override
+    public void onTweetClicked(int position) {
+        // Declare and define intent from this activity to detail view.
+        Intent i = new Intent(this, TweetDetailActivity.class);
+
+        // Extract the clicked tweet from the array
+        Tweet tweet = tweets.get(position);
+
+        // Wrap tweet with Parcels to send it over the other activity
+        i.putExtra(EXTRA_TWEET, Parcels.wrap(tweet));
+
+        // Launch the new activity
+        startActivity(i);
     }
 }

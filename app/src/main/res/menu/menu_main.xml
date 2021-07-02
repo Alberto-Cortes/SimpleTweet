@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/btnCompose"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/vector_compose_dm_fab"
         android:title="Compose"
         app:showAsAction="always" />
 </menu>

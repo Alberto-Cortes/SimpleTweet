@@ -30,6 +30,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
         void onReplyClicked(int position);
         void onLikeClicked(int position);
         void onRetweetClicked(int position);
+        void onTweetClicked(int position);
     }
 
     private static final int SECOND_MILLIS = 1000;
@@ -129,16 +130,16 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
         public Viewholder(@NotNull View itemView) {
             super(itemView);
 
-            ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
-            tvBody = itemView.findViewById(R.id.tvBody);
-            tvHandleName = itemView.findViewById(R.id.tvHandleName);
-            tvTimestamp = itemView.findViewById(R.id.tvTimestamp);
-            ivTweetImage = itemView.findViewById(R.id.ivTweetImage);
-            tvUserName = itemView.findViewById(R.id.tvUserName);
+            ivProfileImage = itemView.findViewById(R.id.ivDetailProfileImage);
+            tvBody = itemView.findViewById(R.id.tvDetailBody);
+            tvHandleName = itemView.findViewById(R.id.tvDetailHandleName);
+            tvTimestamp = itemView.findViewById(R.id.tvDetailTimestamp);
+            ivTweetImage = itemView.findViewById(R.id.ivDetailTweetImage);
+            tvUserName = itemView.findViewById(R.id.tvDetailUserName);
 
-            ibTweetLike = itemView.findViewById(R.id.ibTweetLike);
-            ibTweetReply = itemView.findViewById(R.id.ibTweetLike);
-            ibTweetRetweet = itemView.findViewById(R.id.ibTweetRetweet);
+            ibTweetLike = itemView.findViewById(R.id.ibDetailTweetLike);
+            ibTweetReply = itemView.findViewById(R.id.ibDetailTweetLike);
+            ibTweetRetweet = itemView.findViewById(R.id.ibDetailTweetRetweet);
         }
 
         // Bind data to row of the Recycle View.
@@ -190,6 +191,13 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
                 @Override
                 public void onClick(View v) {
                     tweetInteractionListener.onLikeClicked(getAdapterPosition());
+                }
+            });
+
+            tvBody.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tweetInteractionListener.onTweetClicked(getAdapterPosition());
                 }
             });
         }
